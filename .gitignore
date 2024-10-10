@@ -3,4 +3,4 @@
 **/*-debug.log
 **/.DS_Store
 **/.env.local
-**/.next
+**/.next/

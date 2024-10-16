@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 import { getReviewsByRestaurantId } from "@/src/lib/firebase/firestore.js";
 import { getAuthenticatedAppForUser } from "@/src/lib/firebase/serverApp";
 import { getFirestore } from "firebase/firestore";
-// modified call to avoid [GoogleGenerativeAI Error]: Candidate was blocked due to SAFETY
+// added for modified call to avoid [GoogleGenerativeAI Error]: Candidate was blocked due to SAFETY
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 
 export async function GeminiSummary({ restaurantId }) {
@@ -15,7 +15,7 @@ export async function GeminiSummary({ restaurantId }) {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   // modified call to avoid [GoogleGenerativeAI Error]: Candidate was blocked due to SAFETY
   // from https://ai.google.dev/gemini-api/docs/safety-settings#node.js
-  // const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+  // ORIGINAL LINE: const model = genAI.getGenerativeModel({ model: "gemini-pro"});
   const genAIsafety = [
     {
       category: HarmCategory.HARM_CATEGORY_HARASSMENT,

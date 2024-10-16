@@ -16,7 +16,6 @@ export async function GeminiSummary({ restaurantId }) {
   // modified call to avoid [GoogleGenerativeAI Error]: Candidate was blocked due to SAFETY
   // from https://ai.google.dev/gemini-api/docs/safety-settings#node.js
   // const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-  // HARM_CATEGORY_HARASSMENT, HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT, and HARM_CATEGORY_CIVIC_INTEGRITY
   const genAIsafety = [
     {
       category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -27,6 +26,9 @@ export async function GeminiSummary({ restaurantId }) {
       threshold: HarmBlockThreshold.BLOCK_NONE,
     },
   ];
+  // categories from: https://ai.google.dev/gemini-api/docs/safety-settings#node.js
+  // HARM_CATEGORY_HARASSMENT, HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT, and HARM_CATEGORY_CIVIC_INTEGRITY
+  
   const model = genAI.getGenerativeModel(
     { 
       model: "gemini-1.5-flash",

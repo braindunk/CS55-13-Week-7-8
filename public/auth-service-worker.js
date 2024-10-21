@@ -8006,20 +8006,39 @@
       );
       firebaseConfig = JSON.parse(serializedFirebaseConfig);
     }
-    const { origin } = new URL(event.request.url);
+    const { origin, pathname } = new URL(event.request.url);
     if (origin !== self.location.origin)
       return;
-    event.respondWith(fetchWithFirebaseHeaders(event.request));
+    if (pathname.startsWith("/__/auth/wait/")) {
+      const uid = pathname.split("/").at(-1);
+      event.respondWith(waitForMatchingUid(uid));
+      return;
+    }
+    if (pathname.startsWith("/_next/"))
+      return;
+    if ((event.request.method === "GET" || event.request.method === "POST") && !pathname.includes(".")) {
+      event.respondWith(fetchWithFirebaseHeaders(event.request));
+    }
   });
   async function fetchWithFirebaseHeaders(request) {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const installations = getInstallations(app);
     const headers = new Headers(request.headers);
-    const [authIdToken, installationToken] = await Promise.all([
+    let [authIdToken, installationToken] = await Promise.all([
       getAuthIdToken(auth),
       getToken(installations)
     ]);
+    if (!authIdToken) {
+      console.log("authIdToken null once");
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      authIdToken = await getAuthIdToken();
+    }
+    if (!authIdToken) {
+      console.log("authIdToken null twice");
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      authIdToken = await getAuthIdToken();
+    }
     headers.append("Firebase-Instance-ID-Token", installationToken);
     if (authIdToken)
       headers.append("Authorization", `Bearer ${authIdToken}`);

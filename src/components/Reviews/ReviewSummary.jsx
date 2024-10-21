@@ -32,7 +32,7 @@ export async function GeminiSummary({ restaurantId }) {
   const model = genAI.getGenerativeModel(
     { 
       model: "gemini-1.5-flash",
-      safetySettings: [] //genAIsafety
+      safetySettings: genAIsafety
     }
   );
 

@@ -69,7 +69,12 @@ export async function GeminiSummary({ restaurantId }) {
         </p>
       );
     } else {
-      return <p>Error contacting Gemini</p>;
+      return (
+        <div className="restaurant__review_summary">
+          <p>Error contacting Gemini</p>
+          <p>{process.env.GEMINI_API_KEY}</p>
+        </div>
+      );
     }
   }
 }
